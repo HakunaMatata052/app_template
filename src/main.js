@@ -16,7 +16,7 @@ import Navigation from "vue-navigation"
 // import vueg from 'vueg'    
 import touch from 'vue-directive-touch'
 import Vant from 'vant';
-import 'vant/lib/index.css';
+import 'vant/lib/index.less';
 import 'vant/lib/icon/local.css';  // vant图标库
 Vue.use(Vant);
 Vue.use(touch);
