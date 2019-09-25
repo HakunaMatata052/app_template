@@ -24,29 +24,47 @@
 
 <script>
 export default {
-  props: {
-    tabList: {
-      /**
-       * @description: tabItem字段
-       * @param {title} 标题
-       * @param {path} 路由路径
-       * @param {icon} 图标
-       * @param {icon_press} 选中图片
-       * @Date: 2019-03-06 15:41:27
-       */
-      type: Array,
-      default() {
-        return [];
-      },
-      required: true
-    }
-  },
-  components: {},
   data() {
     return {
       // tabActiveIndex: 0,
       bottom: 0,
-      show: false
+      show: false,      
+      tabList: [
+        {
+          title: "首页",
+          path: "/",
+          icon: "home",
+          icon_press: "home-active",
+          index: 0
+        },
+        {
+          title: "视频",
+          path: "/video",
+          icon: "video",
+          icon_press: "video-active",
+          index: 1
+        },
+        {
+          title: "发布",
+          icon: "release",
+          icon_press: "release",
+          index: 2
+        },
+        {
+          title: "游戏",
+          path: "/game",
+          icon: "game",
+          icon_press: "game-active",
+          index: 3
+        },
+        {
+          title: "我的",
+          path: "/mine",
+          icon: "user",
+          icon_press: "user-active",
+          index: 4
+        }
+      ]
     };
   },
   created() {

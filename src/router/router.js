@@ -29,7 +29,8 @@ const router = new Router({
             isTransition: true,
             title:"电竞",
             isMember: false,
-            isLogin:false
+            isLogin:false,
+            index: 0
           }
         },
         {
@@ -41,7 +42,8 @@ const router = new Router({
             isTransition: true,
             title:"视频",
             isMember: false,
-            isLogin:false
+            isLogin:false,
+            index: 1
           }
         },
         {
@@ -53,7 +55,8 @@ const router = new Router({
             isTransition: true,
             title:"游戏",
             isMember: false,
-            isLogin:false
+            isLogin:false,
+            index: 2
           }
         },
         {
@@ -65,7 +68,8 @@ const router = new Router({
             isTransition: true,
             title:"我的",
             isMember: false,
-            isLogin:true
+            isLogin:true,
+            index: 3
           }
         }
       ]
@@ -110,8 +114,11 @@ const router = new Router({
   ]
 });
 router.beforeEach((to, from, next) => {
+
+  if (to.meta.index!=undefined) {
+    $store.state.tabActiveIndex = to.meta.index
+  }
   if (to.meta.isLogin) {
-    
     if (!window.localStorage.getItem('token')) {
       if(from.name=="login"){
         router.push('/')

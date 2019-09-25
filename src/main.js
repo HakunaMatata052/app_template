@@ -13,14 +13,12 @@ import * as method from "@/common/js/mixin.js"; // 引入全局方法
 import API from "@/server/apis.js"; // 引入api接口
 import VConsole from "vconsole";
 import Navigation from "vue-navigation"
-// import vueg from 'vueg'    
 import touch from 'vue-directive-touch'
 import Vant from 'vant';
 import 'vant/lib/index.less';
 import 'vant/lib/icon/local.css';  // vant图标库
 Vue.use(Vant);
 Vue.use(touch);
-// Vue.use(vueg, router)     //←注意这一句应该在router实例化(router = new VueRouter({})之后
 Vue.config.productionTip = false;
 // 全局引入公用方法，也可以在组件中单独引入，推荐在组件中单独引入。
 Vue.prototype.$METHOD = method;

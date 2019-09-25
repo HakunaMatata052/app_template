@@ -26,42 +26,6 @@ export default {
   data() {
     return {
       keepAlive: [],
-      tabList: [
-        {
-          title: "首页",
-          path: "/",
-          icon: "home",
-          icon_press: "home-active",
-          index: 0
-        },
-        {
-          title: "视频",
-          path: "/video",
-          icon: "video",
-          icon_press: "video-active",
-          index: 1
-        },
-        {
-          title: "发布",
-          icon: "release",
-          icon_press: "release",
-          index: 2
-        },
-        {
-          title: "游戏",
-          path: "/game",
-          icon: "game",
-          icon_press: "game-active",
-          index: 3
-        },
-        {
-          title: "我的",
-          path: "/mine",
-          icon: "user",
-          icon_press: "user-active",
-          index: 4
-        }
-      ]
     };
   },
   created() {
