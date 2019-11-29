@@ -16,7 +16,13 @@ export default {
   data() {
     return {
       transitionName: "",
-      keepAlive: []
+      keepAlive: [],
+      push: null,
+      show: false,
+      message: {
+        title: "",
+        content: ""
+      }
     };
   },
   created() {
@@ -57,10 +63,8 @@ export default {
       );
       that.$store.state.systemType = api.systemType;
     }
-    this.getBanners();
-    this.getLocation();
-    this.openUpdate();
     this.setVux();
+    this.allEvent();
   },
   mounted() {
     // console.log(this.keepAlive); // 设置缓存匹配
@@ -77,109 +81,108 @@ export default {
         }
       });
     },
-    getBanners() {
-      this.$SERVER.getBanners().then(res => {
-        this.$METHOD.setStore("head_img", res.data.head_img);
-        this.$METHOD.setStore("merchant_img", res.data.merchant_img);
-      });
-    },
-    getLocation() {
-      var that = this;
-      //获取定位
-      if (window.navigator.userAgent.match(/APICloud/i)) {
-        let bmLocation = api.require("bmLocation");
-        bmLocation.configManager({
-          accuracy: "device_sensors",
-          filter: 1,
-          activityType: "automotiveNavigation",
-          coordinateType: "GCJ02",
-          locationTimeout: 10,
-          reGeocodeTimeout: 10
-        });
-        bmLocation.singleLocation(
-          {
-            reGeocode: false,
-            netWorkState: false
-          },
-          function(ret, err) {
-            if (ret.status) {
-              that.$METHOD.setStore("position", {
-                lng: ret.location.longitude,
-                lat: ret.location.latitude
-              });
-              that.$store.state.position = {
-                lng: ret.location.longitude,
-                lat: ret.location.latitude
-              };
-              if (that.$store.state.systemType == "android") {
-                that.openUpdate(
-                  ret.location.longitude,
-                  ret.location.latitude,
-                  ret.reGeo.locationDescribe
-                );
-              } else if (that.$store.state.systemType == "ios") {
-                api.ajax(
-                  {
-                    url: "http://api.map.baidu.com/reverse_geocoding/v3/",
-                    method: "post",
-                    data: {
-                      values: {
-                        ak: "r0GPTlafEf4gbOZAENRPNTb0b8OfzXGK",
-                        output: "json",
-                        coordtype: "wgs84ll",
-                        extensions_poi: "1",
-                        location:
-                          ret.location.latitude + "," + ret.location.longitude
-                      }
-                    }
-                  },
-                  function(data) {
-                    if (data) {
-                      if (data.status == 0) {
-                        that.openUpdate(
-                          ret.location.longitude,
-                          ret.location.latitude,
-                          "在" + data.result.pois[0].name + "附近"
-                        );
-                      } else {
-                        postLocation(
-                          ret.location.longitude,
-                          ret.location.latitude
-                        );
-                      }
-                    } else {
-                      postLocation(
-                        ret.location.longitude + "," + ret.location.latitude
-                      );
-                    }
-                  }
-                );
-              }
-            }
-          }
-        );
-      }
-    },
-    // 更新用户定位/在线状态
-    openUpdate(lng, lat, position) {
-      var that = this;
-      if (that.$METHOD.getStore("token")) {
-        that.$SERVER.openUpdate({
-          userId: that.$store.state.userInfo.userid,
-          lng: lng,
-          lat: lat,
-          position: position,
-          loginstate: 1
-        });
-      }
-    },
     setVux() {
-      this.$store.state.token = this.$METHOD.getStore("token");
-      if (this.$METHOD.getStore("userInfo")) {
-        this.$store.state.userInfo = JSON.parse(
-          this.$METHOD.getStore("userInfo")
-        );
+      if (this.$METHOD.getStore("token")) {
+        this.$store.state.token = this.$METHOD.getStore("token");
+        this.$SERVER.getUserInfo().then(res => {
+          this.$store.state.userInfo = res.data;
+          if (window.navigator.userAgent.match(/APICloud/i)) {
+            this.push.joinGroup(
+              {
+                groupName: "department"
+              },
+              function(ret, err) {}
+            );
+            this.push.bind(
+              {
+                userName: res.data.user_nickname,
+                userId: res.data.use_rid
+              },
+              function(ret, err) {}
+            );
+          }
+        });
       }
+    },
+    allEvent() {
+      var that = this;
+      api.addEventListener(
+        {
+          name: "swiperight"
+        },
+        function(ret, err) {
+          if (
+            that.$route.name == "home" ||
+            that.$route.name == "shop" ||
+            that.$route.name == "message" ||
+            that.$route.name == "mine"
+          ) {
+          } else {
+            that.$router.go(-1);
+          }
+        }
+      );
+      //点击消息状态栏跳转
+      api.addEventListener(
+        {
+          name: "noticeclicked"
+        },
+        function(ret, err) {
+          // that.$router.push("/message");  //点击消息跳转
+        }
+      );
+      // 监听推送
+      this.push = api.require("push");
+      this.push.setListener(function(ret, err) {
+        console.log(ret);
+        if (ret) {
+          var content = JSON.parse(ret.data);
+          var des = content.c.replace("<br>", "");
+          api.notification({
+            notify: {
+              title: content.t,
+              content: des
+            }
+          });
+          that.message.title = content.t;
+          that.message.content = des;
+          that.show = true;
+          setTimeout(() => {
+            that.show = false;
+          }, 3000);
+          var message = [];
+          if (that.$METHOD.getStore("message")) {
+            message = that.$METHOD.getStore("message");
+          } else {
+            message = "[]";
+          }
+          message = JSON.parse(message);
+          message.push(content);
+          that.$METHOD.setStore("message", message);
+          that.$store.state.message = new Date().getTime();
+        }
+      });
+
+      //关闭启动图
+      api.removeLaunchView({
+        animation: { type: "fade", duration: 0 }
+      });
+      // 更新
+      api.addEventListener(
+        {
+          name: "smartupdatefinish"
+        },
+        function(ret, err) {
+          that.$dialog
+            .confirm({
+              title: "更新",
+              message: "APP更新完成，是否现在重启？"
+            })
+            .then(() => {
+              api.rebootApp();
+            });
+        }
+      );
     }
   }
 };

@@ -21,131 +21,79 @@ const router = new Router({
       path: "/",
       component: Index,
       children: [{
-          path: "",
-          name: "home",
-          component: () => import("@/views/index/subviews/home.vue"),
-          meta: {
-            keepAlive: true,
-            isTransition: true,
-            title:"电竞",
-            isMember: false,
-            isLogin:false,
-            index: 0
-          }
-        },
-        {
-          path: "/video",
-          name: "video",
-          component: () => import("@/views/index/subviews/video.vue"),
-          meta: {
-            keepAlive: true,
-            isTransition: true,
-            title:"视频",
-            isMember: false,
-            isLogin:false,
-            index: 1
-          }
-        },
-        {
-          path: "/game",
-          name: "game",
-          component: () => import("@/views/index/subviews/game.vue"),
-          meta: {
-            keepAlive: true,
-            isTransition: true,
-            title:"游戏",
-            isMember: false,
-            isLogin:false,
-            index: 2
-          }
-        },
-        {
-          path: "/mine",
-          name: "mine",
-          component: () => import("@/views/index/subviews/mine.vue"),
-          meta: {
-            keepAlive: false,
-            isTransition: true,
-            title:"我的",
-            isMember: false,
-            isLogin:true,
-            index: 3
-          }
+        path: "/",
+        name: "home",
+        component: () => import("@/views/index/subviews/home.vue"),
+        meta: {
+          keepAlive: true,
+          isTransition: true,
+          title: "首页",
+          isMember: false,
+          isLogin: false,
+          icon: "home",
+          icon_press: "home-active",
+          index: 0
         }
-      ]
+      }]
     },
     // 注册登录
     {
       path: "/login/:name?",
-      name:"login",
+      name: "login",
       component: () => import("@/views/login/login.vue"),
       meta: {
         keepAlive: false,
         isTransition: true,
-        title:"登录",
+        title: "登录",
         isMember: false,
-        isLogin:false
+        isLogin: false
       }
     },
     {
       path: "/register",
-      name:"register",
+      name: "register",
       component: () => import("@/views/login/register.vue"),
       meta: {
         keepAlive: false,
         isTransition: true,
-        title:"注册",
+        title: "注册",
         isMember: false,
-        isLogin:false
+        isLogin: false
       }
     },
     {
       path: "/resetPassword",
-      name:"resetPassword",
+      name: "resetPassword",
       component: () => import("@/views/login/resetPassword.vue"),
       meta: {
         keepAlive: false,
         isTransition: true,
-        title:"修改密码",
+        title: "修改密码",
         isMember: false,
-        isLogin:false
+        isLogin: false
       }
     },
   ]
 });
 router.beforeEach((to, from, next) => {
 
-  if (to.meta.index!=undefined) {
-    $store.state.tabActiveIndex = to.meta.index
+  if (to.meta.index != undefined) {
+    store.state.tabActiveIndex = to.meta.index
   }
   if (to.meta.isLogin) {
     if (!window.localStorage.getItem('token')) {
-      if(from.name=="login"){
-        router.push('/')
-      }else{
-        router.push('/login/'+from.name)
-      }      
-    }else{
+      next({path: "/login"});
+      // router.push('/login')
+    } else {
       next()
     }
-    if (to.meta.isMember) {
-      if (!window.localStorage.getItem('token')) {
-        router.push('/login/'+from.name)
-      }else{
-        if (store.state.isMember) {
-          next()
-        }else{
-          router.push('/buymember')
-        }
-      }
-    }
-  }else {
+  } else {
     next()
   }
 })
 
 router.afterEach(route => {
-    
+
   // console.log(route)
   // console.log("跳转")
 })

@@ -7,6 +7,7 @@
         @click-right="openSearchFn()"
         :z-index="999"
         style="background:none"
+        :border="false"
       >
         <div slot="title" class="title">
           <span>{{title}}</span>
@@ -139,5 +140,3 @@ export default {
   }
 }
 </style>
-
-

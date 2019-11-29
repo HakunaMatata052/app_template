@@ -9,11 +9,11 @@
           :class="['tabbar-item', { active: $store.state.tabActiveIndex === index }]"
         >
           <svg-icon
-            :icon-class="$store.state.tabActiveIndex === index ? item.icon_press : item.icon"
-            v-if="item.icon"
+            :icon-class="$store.state.tabActiveIndex === index ? item.meta.icon_press : item.meta.icon"
+            v-if="item.meta.icon"
             slot="right"
           ></svg-icon>
-          <h3 :class="item.icon ? 'tabbar-name' : 'iconShow'">{{ item.title }}</h3>
+          <h3 :class="item.meta.icon ? 'tabbar-name' : 'iconShow'">{{ item.meta.title }}</h3>
         </li>
       </ul>
       <div class="iphonX-box" :style="'height:'+bottom+'px'"></div>
@@ -29,45 +29,11 @@ export default {
       // tabActiveIndex: 0,
       bottom: 0,
       show: false,      
-      tabList: [
-        {
-          title: "首页",
-          path: "/",
-          icon: "home",
-          icon_press: "home-active",
-          index: 0
-        },
-        {
-          title: "视频",
-          path: "/video",
-          icon: "video",
-          icon_press: "video-active",
-          index: 1
-        },
-        {
-          title: "发布",
-          icon: "release",
-          icon_press: "release",
-          index: 2
-        },
-        {
-          title: "游戏",
-          path: "/game",
-          icon: "game",
-          icon_press: "game-active",
-          index: 3
-        },
-        {
-          title: "我的",
-          path: "/mine",
-          icon: "user",
-          icon_press: "user-active",
-          index: 4
-        }
-      ]
+      tabList: []
     };
   },
   created() {
+  this.tabList  = this.$router.options.routes[0].children
     this.$store.state.tabActiveIndex = this.tabList.findIndex(
       item => item.path === this.$route.path
     );

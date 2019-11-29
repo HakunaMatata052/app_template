@@ -6,7 +6,7 @@ const {
   spawn
 } = require("child_process");
 
-const appname = "apiCloud"; // 项目文件名
+const appname = "apicloud"; // 项目文件名  widget  apicloud
 const appPort = 1111; // 真机同步端口,浏览器打开端口。(请与)
 const scriptActive = process.env.npm_lifecycle_event;
 const customTheme = require("./van-custom-theme")
@@ -79,7 +79,10 @@ module.exports = {
     imagesRule.exclude.add(resolve('src/icons'))
     config.module
       .rule('images')
-      .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
+      .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)	  
+      .use('url-loader')
+      .loader('url-loader')
+      .tap(options => Object.assign(options, { limit: 3000 }))
 
   },
   configureWebpack: config => {
