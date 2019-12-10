@@ -8,7 +8,7 @@
       </transition>
     </main>
     <footer>
-      <Tabbar :tabList="tabList"></Tabbar>
+      <Tabbar/>
     </footer>
   </div>
 </template>

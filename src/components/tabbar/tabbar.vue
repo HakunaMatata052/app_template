@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="footer" id="footer">
+    <div class="footer safe-area-inset-bottom boxshadow-top" id="footer">
       <ul class="tabbar-list">
         <li
           v-for="(item, index) in tabList"
@@ -9,16 +9,14 @@
           :class="['tabbar-item', { active: $store.state.tabActiveIndex === index }]"
         >
           <svg-icon
-            :icon-class="$store.state.tabActiveIndex === index ? item.meta.icon_press : item.meta.icon"
+            :icon-class="item.meta.icon"
             v-if="item.meta.icon"
             slot="right"
           ></svg-icon>
           <h3 :class="item.meta.icon ? 'tabbar-name' : 'iconShow'">{{ item.meta.title }}</h3>
         </li>
       </ul>
-      <div class="iphonX-box" :style="'height:'+bottom+'px'"></div>
     </div>
-    <div class="footer-empty" :style="'padding-top:'+bottom+'px'"></div>
   </div>
 </template>
 
@@ -64,16 +62,9 @@ export default {
 
 <style lang="less" scoped>
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
   background-color: #ffffff;
-}
-.footer-empty {  
-  height: 60px;
-}
-.iphonX-box {
-  height: 0;
+  position: relative;
+  z-index: 9999;
 }
 .tabbar-list {
   display: flex;
@@ -111,53 +102,10 @@ export default {
       height: 2em;
     }
     &.active {
-      color: #333;
-    }
-  }
-}
-.van-dialog {
-  background: none;
-  bottom: 20px;
-  top: auto;
-}
-.release-dialog {
-  padding: 5px;
-  .release-group {
-    display: flex;
-    justify-content: space-between;
-    .release-item {
+      color: #1ac0a8;
       svg {
-        width: 45px;
-        height: 45px;
-        border: 3px solid #fff;
-        background: #ffd948;
-        padding: 10px;
-        border-radius: 50%;
-        margin-bottom: 15px;
+        color: #1ac0a8;
       }
-      span {
-        color: #fff;
-        display: block;
-        text-align: center;
-        flex-direction: column-reverse;
-      }
-    }
-  }
-  .release-close {
-    width: 30px;
-    height: 30px;
-    padding: 10px;
-    border-radius: 50%;
-    background: #c2c1c1;
-    margin-top: 30px;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    justify-content: center;
-    flex-direction: column-reverse;
-    align-items: center;
-    .icon {
-      font-size: 28px;
     }
   }
 }

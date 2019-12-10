@@ -4,6 +4,7 @@
     <transition :name="transitionName">
       <keep-alive :max="10" :include="keepAlive">
         <router-view></router-view>
+        <!-- <router-view :key="$route.fullPath"></router-view> -->
       </keep-alive>
     </transition>
   </div>
@@ -62,9 +63,9 @@ export default {
         }
       );
       that.$store.state.systemType = api.systemType;
+      this.allEvent();
     }
     this.setVux();
-    this.allEvent();
   },
   mounted() {
     // console.log(this.keepAlive); // 设置缓存匹配
@@ -95,8 +96,8 @@ export default {
             );
             this.push.bind(
               {
-                userName: res.data.user_nickname,
-                userId: res.data.use_rid
+                userName: res.data.nickname,
+                userId: res.data.uid
               },
               function(ret, err) {}
             );
@@ -113,9 +114,10 @@ export default {
         function(ret, err) {
           if (
             that.$route.name == "home" ||
-            that.$route.name == "shop" ||
-            that.$route.name == "message" ||
-            that.$route.name == "mine"
+            that.$route.name == "categories" ||
+            that.$route.name == "share" ||
+            that.$route.name == "order" ||
+            that.$route.name == "personal"
           ) {
           } else {
             that.$router.go(-1);
@@ -187,36 +189,12 @@ export default {
   }
 };
 </script>
-<style lang="less">
-.color {
-  color: #ffd948;
-}
-@color: #ffd948;
-@black: #000;
-@white: #fff;
-@red: #000 !important;
-@blue: #999;
-@orange: #ff976a;
-@orange-dark: #ed6a0c;
-@orange-light: #fffbe8;
-@green: #07c160;
-@gray: #c9c9c9;
-@gray-light: #e5e5e5;
-@gray-darker: #7d7e80;
-@gray-dark: #969799;
 
-// default colors
-@text-color: #323233;
-@border-color: #ebedf0;
-@active-color: #f2f3f5;
-@background-color: #f8f8f8;
-@background-color-light: #fafafa;
-</style>
 
 <style lang="less" scope>
 #app {
-  font-family: "PingFang-SC-Medium", "PingFang SC", "Microsoft YaHei", Helvetica,
-    Tahoma, Arial, "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei",
+  font-family: Arial, "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei",
+    "PingFang-SC-Medium", "PingFang SC", "Microsoft YaHei", Helvetica, Tahoma,
     sans-serif;
   height: 100%;
 }

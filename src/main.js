@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router/router";
 import store from "./store/store";
+import * as  filters from "./filters/filters"; //过滤器
 import "./registerServiceWorker"; // pwa
 import "@/common/styles/base.css"; // 样式初始化
 // 全局样式
@@ -31,6 +32,10 @@ Vue.use(Navigation, {
   keyName: "AS"
 });
 
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
+
 // const isApp = true; // 手动切换
 // alert(window.navigator.userAgent);
 // 该判断只在云编译环境下才有效 使用isApp变量手动设置环境(ios必须要有测试包的情况下，才会携带apicloud标识)
@@ -48,7 +53,7 @@ if (window.navigator.userAgent.match(/APICloud/i)) {
     }).$mount("#app");
   };
 } else {
-  process.env.NODE_ENV === "development" // && new VConsole();
+  process.env.NODE_ENV === "development"  // && new VConsole();
   new Vue({
     router,
     store,

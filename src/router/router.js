@@ -27,13 +27,64 @@ const router = new Router({
         meta: {
           keepAlive: true,
           isTransition: true,
-          title: "首页",
+          title: "Home",
           isMember: false,
           isLogin: false,
-          icon: "home",
-          icon_press: "home-active",
+          icon: "home-fill",
           index: 0
         }
+      },{
+        path: "/categories",
+        name: "categories",
+        component: () => import("@/views/index/subviews/categories.vue"),
+        meta: {
+          keepAlive: false,
+          isTransition: true,
+          title: "Categories",
+          isMember: false,
+          isLogin: false,
+          icon: "all-fill",
+          index: 1
+        }        
+      },{
+        path: "/share",
+        name: "share",
+        component: () => import("@/views/index/subviews/share.vue"),
+        meta: {
+          keepAlive: false,
+          isTransition: true,
+          title: "Share",
+          isMember: false,
+          isLogin: false,
+          icon: "camera-fill",
+          index: 2
+        }        
+      },{
+        path: "/order",
+        name: "order",
+        component: () => import("@/views/index/subviews/order.vue"),
+        meta: {
+          keepAlive: false,
+          isTransition: true,
+          title: "Order",
+          isMember: false,
+          isLogin: true,
+          icon: "feeds-fill",
+          index: 3
+        }        
+      },{
+        path: "/personal",
+        name: "personal",
+        component: () => import("@/views/index/subviews/personal.vue"),
+        meta: {
+          keepAlive: false,
+          isTransition: true,
+          title: "Personal",
+          isMember: false,
+          isLogin: true,
+          icon: "account-fill",
+          index: 4
+        }        
       }]
     },
     // 注册登录
@@ -44,7 +95,7 @@ const router = new Router({
       meta: {
         keepAlive: false,
         isTransition: true,
-        title: "登录",
+        title: "login",
         isMember: false,
         isLogin: false
       }
@@ -56,7 +107,7 @@ const router = new Router({
       meta: {
         keepAlive: false,
         isTransition: true,
-        title: "注册",
+        title: "register",
         isMember: false,
         isLogin: false
       }
@@ -68,11 +119,145 @@ const router = new Router({
       meta: {
         keepAlive: false,
         isTransition: true,
-        title: "修改密码",
+        title: "resetPassword",
         isMember: false,
         isLogin: false
       }
     },
+    {
+      path: "/goodsDetails/:id/:open?",
+      name: "goodsDetails",
+      component: () => import("@/views/goods/goodsDetails.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "good details",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/confirmationOrder/:id",
+      name: "confirmationOrder",
+      component: () => import("@/views/goods/confirmationOrder.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "FILL ORDER",
+        isMember: false,
+        isLogin: true
+      }
+    },
+    {
+      path: "/shareOrder/:id",
+      name: "shareOrder",
+      component: () => import("@/views/share/shareOrder.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "SHARE ORDER",
+        isMember: false,
+        isLogin: true
+      }
+    },
+    {
+      path: "/cart",
+      name: "cart",
+      component: () => import("@/views/goods/cart.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "SHOPPING CART",
+        isMember: false,
+        isLogin: true
+      }
+    },
+    {
+      path: "/search",
+      name: "search",
+      component: () => import("@/views/search/search.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "search",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/messageList",
+      name: "messageList",
+      component: () => import("@/views/message/messageList.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "MAILBOX",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/messageDetails/:id",
+      name: "messageDetails",
+      component: () => import("@/views/message/messageDetails.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "MAILBOX",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/vip",
+      name: "vip",
+      component: () => import("@/views/mine/vip.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "BECOME VIP",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/orderDetails",
+      name: "orderDetails",
+      component: () => import("@/views/order/orderDetails.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "ORDER DETAILS",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/bankCardList",
+      name: "bankCardList",
+      component: () => import("@/views/mine/bankCardList.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "BANK CARD",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/addBankCard",
+      name: "addBankCard",
+      component: () => import("@/views/mine/addBankCard.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "ADD BANK CARD",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    
+    
   ]
 });
 router.beforeEach((to, from, next) => {

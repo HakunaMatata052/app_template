@@ -1,10 +1,12 @@
 import Vue from "vue";
 import axios from "axios";
-// import qs from "qs";
+import qs from "qs";
 import envconfig from "./envconfig.js";
 import router from "@/router/router.js";
 import store from "../store/store";
-import { Toast } from "vant";
+import {
+  Toast
+} from "vant";
 Vue.use(Toast);
 
 // 状态码错误信息
@@ -29,17 +31,17 @@ const codeMessage = {
 // 发起请求前
 axios.interceptors.request.use(
   config => {
-    if (config.LOADINGHIDE) {
+    if (config.LOADING) {
       Toast.loading({
         duration: 0, // 持续展示 toast
         forbidClick: true, // 禁用背景点击
         loadingType: "spinner",
-        message: "加载中..."
+        message: "loading..."
       });
     }
     // qs转换
     if (config.method.toUpperCase() !== "GET") {
-      // config.data = qs.stringify(config.data);
+      if (Object.prototype.toString.call(config.data) !== '[object FormData]') config.data = qs.stringify(config.data);
     }
     return config;
   },
@@ -55,7 +57,6 @@ axios.interceptors.response.use(
     return res;
   },
   error => {
-    console.log(error);
     Toast.clear();
     if (error) {
       // 请求配置发生的错误
@@ -88,14 +89,14 @@ export default class Axios {
   axios(method, url, params, config) {
     return new Promise((resolve, reject) => {
       if (typeof params !== "object") params = {};
-      let _option = Object.assign(
-        {
+      let _option = Object.assign({
           method,
           url,
           baseURL: envconfig.baseURL,
           timeout: 30000,
           headers: {
-            'Content-Type': 'application/json',
+            //'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
           // withCredentials: true, //是否携带cookies发起请求
         },
@@ -104,22 +105,31 @@ export default class Axios {
       // 添加token
       _option.headers = {
         ..._option.headers,
-        authorization: "Bearer " + store.state.token || "",
+        "Authori-zation": "Bearer " + store.state.token || "",
         // userid: store.state.userInfo.userid || ""
         // Cookie: "JSESSIONID=" + window.localStorage.getItem('Cookie')
       };
       // 处理get、post传参问题
-      method.toUpperCase() !== "GET"
-        ? (_option.data = params)
-        : (_option.params = params);
-
+      method.toUpperCase() !== "GET" ?
+        // (_option.data = {...params,...{token:store.state.token}}) :
+        (_option.data = Object.prototype.toString.call(params) === '[object FormData]'? params:params) :
+        (_option.params = params);
       // 请求成功后服务器返回二次处理
+      if(!window.localStorage.getItem('token')&&config&&config.isLogin){
+        Toast.fail("请登录后再操作！");
+        return
+      }
       axios.request(_option).then(
         res => {
-          if(res.data.code==200){
+          if (res.data.status == 200) {
             resolve(res.data);
-          }else{
+          } else if(res.data.status == 410000){
             Toast.fail(res.data.msg);
+            window.localStorage.removeItem('token')
+          } else {
+            if(!config||!config.fail){
+              Toast.fail(res.data.msg);
+            }
             reject(res.data)
           }
         },

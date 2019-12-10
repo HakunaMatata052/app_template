@@ -12,50 +12,37 @@ display: none;
 }
 
 
+@font-face {
+  font-family: "Bahnschrift";
+  src: url(../../assets/fonts/BAHNSCHRIFT.TTF) format("truetype");
+}
+
 body{  
-  background: #f5f5f5;
-  font-size: 14px;
-  padding-top: constant(safe-area-inset-top); //为导航栏+状态栏的高度 88px
-  padding-top: env(safe-area-inset-top); //为导航栏+状态栏的高度 88px
+  font-size: 13px;
+
   padding-left: constant(safe-area-inset-left); //如果未竖屏时为0
   padding-left: env(safe-area-inset-left); //如果未竖屏时为0
   padding-right: constant(safe-area-inset-right); //如果未竖屏时为0
   padding-right: env(safe-area-inset-right); //如果未竖屏时为0
+
+}
+.safe-area-inset-top {
+  padding-top: constant(safe-area-inset-top); //为导航栏+状态栏的高度 88px
+  padding-top: env(safe-area-inset-top); //为导航栏+状态栏的高度 88px
+}
+.safe-area-inset-bottom {
   padding-bottom: constant(safe-area-inset-bottom); //为底下圆弧的高度 34px
   padding-bottom: env(safe-area-inset-bottom); //为底下圆弧的高度 34px
 }
-
-.box {
-  margin-top: 10px;
-  padding: 0 15px;
-  background: #fff;
-}
 .icon {
   display: inline-block;
-  width: 1em;
-  height: 1em;
+  // width: 1em;
+  // height: 1em;
   stroke-width: 0;
   stroke: currentColor;
   fill: currentColor;
   font-size: 22px;
 }
-.color {
-  color: rgba(254, 196, 58, 1);
-}
-
-.bg {
-  background: rgba(254, 196, 58, 1);
-}
-
-.title-tabs {
-  .van-hairline--top-bottom::after {
-    border: 0;
-  }
-}
-.van-nav-bar .van-icon {
-  color: #999 !important;
-}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -66,6 +53,17 @@ body{
     flex-grow: 1;
     overflow-x: hidden;
     overflow-y: scroll;
+    padding: 0 15px;
     -webkit-overflow-scrolling: touch;
   }
+}
+
+.boxshadow-top{
+  box-shadow: 0px 2px 8px 0px 
+		rgba(0, 0, 0, 0.14);
+}
+
+.boxshadow-bottom{
+  box-shadow: 0px 0px 6px 0px 
+  rgba(35, 38, 42, 0.2);
 }

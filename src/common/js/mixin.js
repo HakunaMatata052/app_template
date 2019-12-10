@@ -62,33 +62,6 @@ export const uuid = function (len, radix, typeid) {
 };
 
 /**
- * 时间格式转yyyy-MM-dd hh:mm:ss 
- * @param {Number} dateTimeStamp 毫秒数
- * @param {String} fmt 指定格式 yyyy-MM-dd hh:mm:ss 
- */
-export const format = function (dateTimeStamp,fmt) {
-  dateTimeStamp = new Date(Number(dateTimeStamp)) 
-  var o = {
-    "M+": dateTimeStamp.getMonth() + 1, //月份 
-    "d+": dateTimeStamp.getDate(), //日 
-    "h+": dateTimeStamp.getHours(), //小时 
-    "m+": dateTimeStamp.getMinutes(), //分 
-    "s+": dateTimeStamp.getSeconds(), //秒 
-    "q+": Math.floor((dateTimeStamp.getMonth() + 3) / 3), //季度 
-    "S": dateTimeStamp.getMilliseconds() //毫秒 
-  };
-  if (/(y+)/.test(fmt)) {
-    fmt = fmt.replace(RegExp.$1, (dateTimeStamp.getFullYear() + "").substr(4 - RegExp.$1.length));
-  }
-  for (var k in o) {
-    if (new RegExp("(" + k + ")").test(fmt)) {
-      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    }
-  }
-  return fmt;
-}
-
-/**
  * url参数转JSON参数
  * @param {url}} url
  */
@@ -106,59 +79,6 @@ export const parseQueryString = function (url) {
   }
   return ret;
 };
-/**
- * 中文时间
- * @param {Number} dateTimeStamp 毫秒数
- */
-export const timeSwitchString = function (dateTimeStamp) {
-  // dateTimeStamp是一个时间毫秒，注意时间戳是秒的形式，在这个毫秒的基础上除以1000，就是十位数的时间戳。13位数的都是时间毫秒。
-  var minute = 1000 * 60; // 把分，时，天，周，半个月，一个月用毫秒表示
-  var hour = minute * 60;
-  var day = hour * 24;
-  var week = day * 7;
-  // var halfamonth = day * 15
-  var month = day * 30;
-  var now = new Date().getTime(); // 获取当前时间毫秒
-  var diffValue = now - dateTimeStamp; // 时间差
-  var result;
-  if (diffValue < 0) {
-    return;
-  }
-  var minC = diffValue / minute; // 计算时间差的分，时，天，周，月
-  var hourC = diffValue / hour;
-  var dayC = diffValue / day;
-  var weekC = diffValue / week;
-  var monthC = diffValue / month;
-  if (monthC >= 1 && monthC <= 3) {
-    result = " " + parseInt(monthC) + "月前";
-  } else if (weekC >= 1 && weekC <= 3) {
-    result = " " + parseInt(weekC) + "周前";
-  } else if (dayC >= 1 && dayC <= 6) {
-    result = " " + parseInt(dayC) + "天前";
-  } else if (hourC >= 1 && hourC <= 23) {
-    result = " " + parseInt(hourC) + "小时前";
-  } else if (minC >= 1 && minC <= 59) {
-    result = " " + parseInt(minC) + "分钟前";
-  } else if (diffValue >= 0 && diffValue <= minute) {
-    result = "刚刚";
-  } else {
-    var datetime = new Date();
-    datetime.setTime(dateTimeStamp);
-    var Nyear = datetime.getFullYear();
-    var Nmonth =
-      datetime.getMonth() + 1 < 10 ?
-      "0" + (datetime.getMonth() + 1) :
-      datetime.getMonth() + 1;
-    var Ndate =
-      datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
-    // var Nhour = datetime.getHours() < 10 ? '0' + datetime.getHours() : datetime.getHours()
-    // var Nminute = datetime.getMinutes() < 10 ? '0' + datetime.getMinutes() : datetime.getMinutes()
-    // var Nsecond = datetime.getSeconds() < 10 ? '0' + datetime.getSeconds() : datetime.getSeconds()
-    result = Nyear + "-" + Nmonth + "-" + Ndate;
-  }
-  return result;
-};
-
 /**
  * 倒计时数组
  * 请勿使用'-'代替'/',在iPhone不支持
@@ -393,3 +313,61 @@ export const IdCodeValid = function (code) {
   }
   return row;
 };
+
+export const isPassword = function( content , isGroup , acceptSpecial , starLength , endLength){
+  isGroup = isGroup==undefined?false:isGroup
+  acceptSpecial = acceptSpecial==undefined?false:acceptSpecial
+  starLength = starLength==undefined?6:starLength
+  endLength = endLength==undefined?10:endLength
+
+  var regex_str = '';
+  if(isGroup){
+      regex_str += '(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*\\d)';
+  }
+  if(!acceptSpecial){
+      regex_str += '(?=^\\w+$)';
+  }
+  regex_str += `[\\s\\S]{${starLength},${endLength}}$`;
+  var regex = new RegExp(regex_str);
+  return regex.test(content);
+}
+
+/**
+* Check whether the content is Chinese
+* @param {string} content
+*/
+export const isChinese = function( content ){
+  return /^[\u4e00-\u9fa5]+$/.test(content);
+}
+
+/**
+* Check whether the content is Email 
+* @param {string} content
+*/
+export const isEmail = function( content ){
+  return /^[\w-_]+@[\w-_]+(?:\.\w+)+$/.test(content);
+}
+
+/**
+* Check whether the content is IDCard
+* @param {string} content
+*/
+export const isIDCard = function( content ){
+  return /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}(?:[0-9]|X)$|^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/.test(content);
+}
+
+/**
+* Check whether the content is Money
+* @param {string} content
+*/
+export const isMoney = function( content ){
+  return /^(?:(?:0)|[^0]\d*)(\.\d+)?$/.test(content);
+}
+
+/**
+* Check whether the content is Phone
+* @param {string} content
+*/
+export const isPhone = function( content ){
+  return /^1[3|4|5|7|8|9][0-9]\d{8}$/.test(content);
+}

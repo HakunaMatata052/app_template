@@ -18,6 +18,9 @@ export default new Vuex.Store({
       lng:34.222,
       lat:108.222
     },  //用户定位
+    currency:"$",
+    vipList:[],
+    cartCount:0,
     qiniuaddr: "http://95youhe.com/"  //七牛地址
   },
   mutations: {},

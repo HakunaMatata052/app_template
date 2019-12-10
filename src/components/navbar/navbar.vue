@@ -1,40 +1,41 @@
 <template>
-  <div style="position: relative">
-    <div class="navbar" id="navbar" :class=" stl ? stl : ''">
-      <div class="top" :style="'padding-top:'+ top +'px'"></div>
+    <div class="navbar safe-area-inset-top" id="navbar">
       <van-nav-bar
         @click-left="onClickLeft()"
-        @click-right="openSearchFn()"
         :z-index="999"
         style="background:none"
         :border="false"
+        class="nav-bar"
       >
-        <div slot="title" class="title">
+        <van-search
+          placeholder="Search for anything"
+          v-model="value"
+          shape="round"
+          @focus="$router.push('/search')"
+          slot="title"
+          class="search"
+          v-if="search"
+        />
+
+        <div slot="title" class="title" v-else>
           <span>{{title}}</span>
           <slot name="title"></slot>
         </div>
         <van-icon name="arrow-left" class="left" slot="left" v-if="goback" />
-        <!-- <svg-icon icon-class="filter" class="left" slot="left" v-if="filter && !goback" /> -->
-        <svg-icon icon-class="search" class="right" slot="right" v-if="search" />
-        <slot name="right" slot="right" v-else></slot>
+        <slot name="left" slot="left"></slot>
+        <div class="right" slot="right">
+          <slot name="right"></slot>
+          <van-icon name="service-o" size="23px" @click="$router.push('/search/2')" v-if="kefu" />
+        </div>
       </van-nav-bar>
     </div>
-    <div class="navbar-empty" :style="'padding-top:'+ top +'px'" v-if="!stl"></div>
-    <van-popup v-model="searchShow" position="top" get-container="body">
-      <div class="navbar-empty" v-if="searchEmptyShow && !stl"></div>
-      <van-search placeholder="请输入搜索关键词" v-model="value" @blur="searchFn" />
-    </van-popup>
-  </div>
 </template>
 <script>
 export default {
   name: "navbar",
   data() {
     return {
-      top: "",
-      searchShow: false,
-      value: "",
-      searchEmptyShow: false
+      value: ""
     };
   },
   props: {
@@ -59,45 +60,20 @@ export default {
       },
       required: false
     },
-    filter: {
+    kefu: {
       type: Boolean,
       default() {
-        return false;
-      },
-      required: false
-    },
-    stl: {
-      type: String,
-      default() {
-        return;
+        return true;
       },
       required: false
     }
   },
   components: {},
-  mounted() {
-    var systemType = this.$store.state.systemType;
-    if (systemType == "android") {
-      this.top = 25;
-    }
-    if (systemType == "ios") {
-      this.top = 40;
-      this.searchEmptyShow = true;
-    }
-  },
   methods: {
     onClickLeft() {
       if (this.goback) {
         this.$router.go(-1);
       }
-    },
-    openSearchFn() {
-      if (this.search) {
-        this.searchShow = true;
-      }
-    },
-    searchFn() {
-      console.log("搜索");
     }
   }
 };
@@ -106,15 +82,24 @@ export default {
 .nobg .van-hairline--bottom::after {
   border-bottom-width: 0;
 }
+.nav-bar {
+  padding: 0 15px;
+  .van-nav-bar__left, .van-nav-bar__right{
+    position:static!important;
+  }
+  .van-nav-bar__title {
+    flex-grow: 1;
+    max-width: 100%!important;
+    padding: 0 15px;
+  }
+}
 </style>
 
 <style lang="less" scoped>
 .navbar {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 999;
   background: #fff;
+  position: relative;
+  z-index: 999;
   .title {
     span {
       font-weight: bold;
@@ -124,19 +109,16 @@ export default {
   .right {
     font-size: 20px;
   }
+  .nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
-.navbar-empty {
+.search {
   height: 46px;
-}
-
-/* 风格 */
-.nobg {
-  background: none;
-  .title {
-    color: #fff;
-  }
-  .left {
-    color: #fff !important;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
